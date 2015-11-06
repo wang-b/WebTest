@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title><%= locals.title || 'WebTest' %></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta http-equiv="Access-Control-Allow-Origin" content="*"/> <!-- 跨域 -->
+        <meta name="keywords" content="<%= locals.title || 'WebTest' %>"/>
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="/css/style.css" />
+        <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+    </head>
+    <body>
+        <%- locals.header || '' %>
+        <%- locals.main || '' %>
+        <%- locals.footer || '' %>
+
+        <% if (locals.piwik && locals.piwik == 'product') { %>
+            <%- include ../piwik/product.ejs %>
+        <% } else { %>
+            <%- include ../piwik/common.ejs %>
+        <% } %>
+    </body>
+</html>

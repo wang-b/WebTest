@@ -1,0 +1,35 @@
+<!-- Piwik -->
+<script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['setCustomVariable', 1, 'pid', window._product.id, 'page']);
+    _paq.push(['setCustomVariable', 1, 'pid', window._product.id, 'visit']);
+    _paq.push(['setCustomVariable', 2, 'uid', window._product.uid, 'page']);
+    _paq.push(['setCustomVariable', 2, 'uid', window._product.uid, 'visit']);
+    _paq.push(['setDocumentTitle', document.domain + '/' + document.title]);
+    //_paq.push(['setCookieDomain', '*.me.cn']);
+    //_paq.push(['setDomains', ['127.0.0.1', 'localhost']]); //增加主机域名，这些域名不记录为"出站链接"
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u = "//localpiwik.com/";
+        var trackerUrl = u + 'piwik.php';
+        var siteId = 1;
+        _paq.push(['setTrackerUrl', trackerUrl]);
+        _paq.push(['setSiteId', siteId]);
+
+        var d = document,
+            g = d.createElement('script'),
+            s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript';
+        g.async = false;  //async：异步(多线程);
+        g.defer = true;
+        g.onload = onPiwikReady;
+        g.src = u + 'piwik.js';
+        s.parentNode.insertBefore(g, s);
+
+        function onPiwikReady() {
+            window.piwikTracker = window.Piwik.getTracker(trackerUrl, siteId);
+        }
+    })();
+</script>
+<!-- End Piwik Code -->

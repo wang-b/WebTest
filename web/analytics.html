@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Analytics</title>
+        <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
+        <link rel="stylesheet" href="css/base.css" />
+        <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    </head>
+    <body>
+        <h3>Analytics Demo</h3>
+
+        <script type="text/javascript">
+            $(function(){
+                window.Analytics = {
+                    host: 'http://localpiwik.com/',
+                    idSite: 1,
+                    format: 'json'
+                };
+
+            });
+        </script>
+    </body>
+</html>
