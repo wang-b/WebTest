@@ -1,12 +1,13 @@
 <h1>Product</h1>
+<p>当前的pid: <%= locals.pid %></p>
 <!-- http://www.agoodme.com/#/preview/tid=14f8d528c8c71a80 -->
 <iframe width="960px" height="600px" src="http://www.agoodme.com/#/preview/tid=14f8d528c8c71a80"></iframe>
+<a href="/">返回</a>
 <script type="text/javascript">
-    (function(){
-        window._product = {
-            id: 1001,
-            uid: 2001,
-            name: 'product1'
-        };
-    })();
+    var pid = <%= locals.pid || 2001 %>;
+    var puid = pid;
+    window._product = {
+        id: pid,  //作品ID
+        uid: puid  //作品所属用户ID，即作者
+    };
 </script>

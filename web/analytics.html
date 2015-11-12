@@ -6,18 +6,195 @@
         <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
         <link rel="stylesheet" href="css/base.css" />
         <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+        <style>
+            body {padding: 20px 50px;}
+            a {display: inline-block; padding-right: 20px;}
+            .result {
+                width: 900px;
+                min-height: 100px;
+                padding: 5px;
+                margin: 10px 0;
+                line-height: normal;
+                border: 1px solid #133133;
+                color: #3b707d;
+                font-size: 14px;
+                font-family: "Courier New", Courier, monospace;
+                background: #fbfff4;
+            }
+        </style>
     </head>
     <body>
         <h3>Analytics Demo</h3>
+
+        <div>
+            <a href="#" id="analyticsTest">ME统计接口测试</a>
+            <div id="resultTest" class="result">
+
+            </div>
+        </div>
+
+        <ul>
+            <li>
+                <a href="#" class="analytics" method="VisitorInterest.getNumberOfVisitsPerVisitDuration">VisitorInterest.getNumberOfVisitsPerVisitDuration</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitorInterest.getNumberOfVisitsPerPage">VisitorInterest.getNumberOfVisitsPerPage</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitorInterest.getNumberOfVisitsByDaysSinceLast">VisitorInterest.getNumberOfVisitsByDaysSinceLast</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitorInterest.getNumberOfVisitsByVisitCount">VisitorInterest.getNumberOfVisitsByVisitCount</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitsSummary.getVisits">VisitsSummary.getVisits</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitsSummary.get">VisitsSummary.get</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitsSummary.getActions">VisitsSummary.getActions</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitsSummary.getSumVisitsLength">VisitsSummary.getSumVisitsLength</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitTime.getVisitInformationPerLocalTime">VisitTime.getVisitInformationPerLocalTime</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitTime.getVisitInformationPerServerTime">VisitTime.getVisitInformationPerServerTime</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitTime.getByDayOfWeek">VisitTime.getByDayOfWeek</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="VisitFrequency.get">VisitFrequency.get</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="Actions.get">Actions.get</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method="Actions.getPageUrls">Actions.getPageUrls</a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method=""></a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method=""></a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method=""></a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method=""></a>
+            </li>
+            <li>
+                <a href="#" class="analytics" method=""></a>
+            </li>
+        </ul>
 
         <script type="text/javascript">
             $(function(){
                 window.Analytics = {
                     host: 'http://localpiwik.com/',
-                    idSite: 1,
-                    format: 'json'
+                    params: {
+                        idSite: 1,
+                        format: 'json',
+                        token_auth: '7917f2596f8bb70c954893f200ba6274',
+                        module: 'API'
+                    }
                 };
 
+                function merge(){
+                    if (arguments.length > 0) {
+                        var obj = {};
+                        //注：相同名称的字段，取先传递的对象的字段
+                        for (var i = 0; i < arguments.length; i ++) {
+                            var arg = arguments[i];
+                            if (arg && typeof(arg) == 'object') {
+                                for (var key in arg) {
+                                    if (!obj.hasOwnProperty(key) && arg.hasOwnProperty(key)) {
+                                        obj[key] = arg[key];
+                                    }
+                                }
+                            }
+                        }
+                        return obj;
+                    }
+                    return null;
+                }
+
+                function getSegment(uid, pid) {
+                    var segment = '';
+                    if (uid) {
+                        segment += "customVariableName1==uid;customVariableValue1==" + uid + ";";
+                    }
+                    if (pid) {
+                        segment += "customVariableName2==pid;customVariableValue2==" + pid + ";";
+                    }
+                    if (segment == '') {
+                        return null;
+                    }
+                    return {
+                        segment: segment.substring(0, segment.length - 1)
+                    };
+                }
+
+                function getCondition(period, date){
+                    return {
+                        period: period || 'week',
+                        date: date || '2015-11-06'
+                    }
+                }
+
+                $('a.analytics').on('click', function(){
+                    var params = merge(getCondition(), getSegment(1001, 2001), window.Analytics.params);
+                    var $obj = $(this);
+                    params.method = $obj.attr('method');
+                    console.dir(params);
+                    $.ajax({
+                        url: window.Analytics.host,
+                        type: 'GET',
+                        dataType: 'jsonp',
+                        data: params,
+                        success: function(data, status){
+                            console.log('请求成功: ' + status);
+                            console.log('data: ' + JSON.stringify(data));
+                            $obj.siblings().remove();
+                            $obj.after('<code>' + JSON.stringify(data) + '</code>');
+                        },
+                        error: function(xhr, status, err){
+                            alert('请求失败: ' + status + (err && err.message ? ', ' + err.message : ''));
+                        }
+                    });
+                });
+
+                $("#analyticsTest").on('click', function(){
+                    var params = {
+                        //action: 'pdistr',
+                        token_auth: window.Analytics.params.token_auth,
+                        idSite: window.Analytics.params.idSite,
+                        pid: 2001,
+                        city: 1
+                        //period: 'week',
+                        //date: '2015-11-06'
+                    };
+                    $.ajax({
+                        url: 'http://localpiwik.com/me/analytics.php',
+                        type: 'GET',
+                        dataType: 'text',
+                        data: params,
+                        success: function(data, status) {
+                            console.log('请求成功: ' + status);
+                            console.log('data: ' + data);
+
+                            $("#resultTest").html(data);
+                        },
+                        error: function(xhr, status, err) {
+                            alert('请求失败: ' + status + (err && err.message ? ', ' + err.message : ''));
+                        }
+                    });
+                });
             });
         </script>
     </body>
