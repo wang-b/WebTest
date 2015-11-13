@@ -181,7 +181,7 @@
                         //date: '2015-11-06'
                     };
                     $.ajax({
-                        url: 'http://localpiwik.com/me/analytics.php',
+                        url: window.Analytics.host + 'me/analytics.php',
                         type: 'GET',
                         dataType: 'text',
                         data: params,
