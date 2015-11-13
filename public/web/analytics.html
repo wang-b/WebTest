@@ -69,6 +69,7 @@
         </div>
 
         <div>
+            <a href="#" id="tokenauthTest">ME统计接口token_auth测试</a>
             <a href="#" id="analyticsTest">ME统计接口测试</a>
             <div id="resultTest" class="result">
 
@@ -259,6 +260,28 @@
                         success: function(data, status) {
                             console.log('请求成功: ' + status);
                             console.log('data: ' + data);
+
+                            $("#resultTest").html(data);
+                        },
+                        error: function(xhr, status, err) {
+                            alert('请求失败: ' + status + (err && err.message ? ', ' + err.message : ''));
+                        }
+                    });
+                });
+
+                $("#tokenauthTest").click(function(){
+                    var analytics = getAnalytics();
+                    if (!analytics) {
+                        return;
+                    }
+                    $.ajax({
+                        url: analytics.host + 'me/index.php',
+                        type: 'POST',
+                        dataType: 'text',
+                        data: {username: 'admin', password: '123456'},
+                        success: function(data, status) {
+                            console.log('请求成功: ' + status);
+                            console.log('data: ', data);
 
                             $("#resultTest").html(data);
                         },
