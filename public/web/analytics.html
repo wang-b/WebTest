@@ -4,8 +4,7 @@
         <meta charset="UTF-8">
         <title>Analytics</title>
         <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
-        <link rel="stylesheet" href="css/base.css" />
-        <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
         <style>
             body {padding: 20px 50px;}
             a {display: inline-block; padding-right: 20px;}
@@ -21,10 +20,53 @@
                 font-family: "Courier New", Courier, monospace;
                 background: #fbfff4;
             }
+            .cfg {
+                width: 900px;
+                min-height: 60px;
+                padding: 5px 0;
+                margin: 5px 0;
+            }
+            .f-row {
+                margin: 5px 0;
+            }
+            .f-row label {
+                display: inline-block;
+                width: 80px;
+                height: 24px;
+                line-height: 24px;
+                text-align: right;
+                font-size: 16px;
+                color: #00B7FF;
+            }
+            .f-row input {
+                width: 400px;
+                height: 24px;
+                line-height: 24px;
+                border: none;
+                border-bottom: 1px solid #000000;
+            }
         </style>
     </head>
     <body>
         <h3>Analytics Demo</h3>
+
+        <div class="cfg">
+            <fieldset>
+                <legend>配置信息</legend>
+                <div class="f-row">
+                    <label for="ip">IP:</label>
+                    <input type="text" name="ip" value="http://localpiwik.com/" id="ip"/>
+                </div>
+                <div class="f-row">
+                    <label for="idSite">idSite:</label>
+                    <input type="text" name="idSite" value="1" id="idSite"/>
+                </div>
+                <div class="f-row">
+                    <label for="token_auth">token_auth:</label>
+                    <input type="text" name="token_auth" value="5920dc354b2c317ae6f2137168a799d4" id="token_auth"/>
+                </div>
+            </fieldset>
+        </div>
 
         <div>
             <a href="#" id="analyticsTest">ME统计接口测试</a>
@@ -95,15 +137,36 @@
 
         <script type="text/javascript">
             $(function(){
-                window.Analytics = {
-                    host: 'http://localpiwik.com/',
-                    params: {
-                        idSite: 1,
+                function getAnalytics(){
+                    var params = {
                         format: 'json',
-                        token_auth: '5920dc354b2c317ae6f2137168a799d4',
                         module: 'API'
+                    };
+                    var obj = {};
+                    var ip = $('#ip').val();
+                    var idSite = $('#idSite').val();
+                    var token_auth = $('#token_auth').val();
+                    if (ip == '') {
+                        alert('请输入主机IP');
+                        return false;
                     }
-                };
+                    if (idSite == '') {
+                        alert('请输入idSite');
+                        return false;
+                    }
+                    if (token_auth == '') {
+                        alert('请输入token_auth');
+                        return false;
+                    }
+                    if (ip.substr(ip.length - 1) != '/') {
+                        ip += '/';
+                    }
+                    obj.host = ip;
+                    params.idSite = idSite;
+                    params.token_auth = token_auth;
+                    obj.params = params;
+                    return obj;
+                }
 
                 function merge(){
                     if (arguments.length > 0) {
@@ -143,17 +206,21 @@
                 function getCondition(period, date){
                     return {
                         period: period || 'week',
-                        date: date || '2015-11-06'
+                        date: date || 'today'
                     }
                 }
 
                 $('a.analytics').on('click', function(){
-                    var params = merge(getCondition(), getSegment(1001, 2001), window.Analytics.params);
+                    var analytics = getAnalytics();
+                    if (!analytics) {
+                        return;
+                    }
+                    var params = merge(getCondition(), getSegment(1001, 2001), analytics.params);
                     var $obj = $(this);
                     params.method = $obj.attr('method');
                     console.dir(params);
                     $.ajax({
-                        url: window.Analytics.host,
+                        url: analytics.host,
                         type: 'GET',
                         dataType: 'jsonp',
                         data: params,
@@ -170,10 +237,14 @@
                 });
 
                 $("#analyticsTest").on('click', function(){
+                    var analytics = getAnalytics();
+                    if (!analytics) {
+                        return;
+                    }
                     var params = {
                         //action: 'pdistr',
-                        token_auth: window.Analytics.params.token_auth,
-                        idSite: window.Analytics.params.idSite,
+                        token_auth: analytics.params.token_auth,
+                        idSite: analytics.params.idSite,
                         //language: 'zh-cn',  //中文
                         pid: 2001,
                         city: 1
@@ -181,7 +252,7 @@
                         //date: '2015-11-06'
                     };
                     $.ajax({
-                        url: window.Analytics.host + 'me/analytics.php',
+                        url: analytics.host + 'me/analytics.php',
                         type: 'GET',
                         dataType: 'text',
                         data: params,
