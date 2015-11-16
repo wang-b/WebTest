@@ -3,6 +3,8 @@
     var uid = window._user ? window._user.id : null;  //当前访客id(如果有的话)
     var pid = window._product ? window._product.id : null; //当前作品id
     var puid = window._product ? window._product.uid : null;  //当前作品所属用户id(作者)
+    var u = "//localpiwik.com/";   //注: 需配置
+    var siteId = 1;  //注：需配置
 
     var _paq = _paq || [];
     if (uid) {
@@ -23,8 +25,8 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
-        var u = "//localpiwik.com/";   //注: 需配置
-        var siteId = 1;  //注：需配置
+        //var u = "//localpiwik.com/";   //注: 需配置
+        //var siteId = 1;  //注：需配置
         var trackerUrl = u + 'piwik.php';
         _paq.push(['setTrackerUrl', trackerUrl]);
         _paq.push(['setSiteId', siteId]);
