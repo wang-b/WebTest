@@ -31,93 +31,86 @@
     };
 
     /**
-     * 页面统计服务-设置当前的用户标识
-     * @param uid
-     * @param scope
+     * 设置常规统计属性
+     * @param uid 用户id
+     * @param pid 作品id
+     * @param puid 作品所属用户（作者）
+     * @param scope 参数域，默认‘visit’
      */
-    MeAnalytics.prototype.setUid = function(uid, scope){
+    MeAnalytics.prototype.setCommonData = function() {
+        var args = arguments || [];
+        var uid  = args.length > 0 ? args[0] : null;
+        var pid  = args.length > 1 ? args[1] : null;
+        var puid  = args.length > 2 ? args[2] : null;
+        var scope  = args.length > 3 ? (args[3] || VarScope.VISIT) : VarScope.VISIT;
         if (uid) {
-            this.getTracker().setCustomVariable(1, 'uid', uid, scope || VarScope.PAGE);
+            this.getTracker().setCustomVariable(1, 'uid', uid, scope);
         }
-    };
-
-    /**
-     * 页面统计服务-设置当前的作品标识
-     * @param pid
-     * @param scope
-     */
-    MeAnalytics.prototype.setPid = function(pid, scope){
         if (pid) {
-            this.getTracker().setCustomVariable(2, 'pid', pid, scope || VarScope.PAGE);
+            this.getTracker().setCustomVariable(2, 'pid', pid, scope);
         }
-    };
-
-    /**
-     * 页面统计服务-设置当前的作品所有者标识
-     * @param puid
-     * @param scope
-     */
-    MeAnalytics.prototype.setPuid = function(puid, scope){
         if (puid) {
-            this.getTracker().setCustomVariable(3, 'puid', puid, scope || VarScope.PAGE);
+            this.getTracker().setCustomVariable(3, 'puid', puid, scope);
         }
     };
 
     /**
-     * 手动触发一次页面统计
+     * 设置目标统计相关参数
+     * @param act 目标名称
+     * @param type 目标类型
+     * @param scope 参数域，默认‘visit’
      */
-    MeAnalytics.prototype.trackPageView = function(){
-        this.getTracker().trackPageView();  //手动触发一次页面统计
+    MeAnalytics.prototype.setGoalData = function(){
+        var args = arguments || [];
+        var act = args.length > 0 ? args[0] : null;
+        var type = args.length > 1 ? args[1] : null;
+        var scope = args.length > 2 ? (args[2] || VarScope.VISIT) : VarScope.VISIT;
+        if (act) {
+            this.getTracker().setCustomVariable(4, 'act', act, scope);
+        }
+        if (type) {
+            this.getTracker().setCustomVariable(5, 'type', type, scope);
+        }
     };
 
     /**
      * 手动触发一次产品统计
-     * 注: data参数只在当次统计中起作用
-     * @param pid 作品id
      * @param uid 用户标识
+     * @param pid 作品id
      * @param puid 作品所属用户标识
      */
-    MeAnalytics.prototype.trackProduct = function(pid, uid, puid){
-        var idx1ForPage = null,
-            idx2ForPage = null,
-            idx3ForPage = null;
-        if (uid) {
-            idx1ForPage = this.getTracker().getCustomVariable(1, VarScope.PAGE);
-            this.setUid(uid, VarScope.PAGE);
-        }
-        if (pid) {
-            idx2ForPage = this.getTracker().getCustomVariable(2, VarScope.PAGE);
-            this.setPid(pid, VarScope.PAGE);
-        }
-        if (puid) {
-            idx3ForPage = this.getTracker().getCustomVariable(3, VarScope.PAGE);
-            this.setPuid(puid, VarScope.PAGE);
-        }
-
+    MeAnalytics.prototype.trackPageView = function(){
+        var args = arguments || [];
+        var uid  = args.length > 0 ? args[0] : null;
+        var pid  = args.length > 1 ? args[1] : null;
+        var puid  = args.length > 2 ? args[2] : null;
+        this.setCommonData(uid, pid, puid, VarScope.PAGE);
         this.getTracker().trackPageView();  //手动触发一次页面统计
+    };
 
-        //获取此前缓存的数据
-        if (uid) {
-            if (idx1ForPage && idx1ForPage.length > 0) {
-                this.getTracker().setCustomVariable(1, idx1ForPage[0], idx1ForPage[1], VarScope.PAGE);
-            } else {
-                this.getTracker().deleteCustomVariable(1, VarScope.PAGE);
-            }
+    /**
+     * 手动触发一次
+     * @param idGoal 目标id, 必需
+     * @param act 目标行为
+     * @param type 目标行为类型
+     * @param uid 用户id
+     * @param pid 作品id
+     * @param puid 作品所属作者id
+     */
+    MeAnalytics.prototype.trackGoal = function(){
+        var args = arguments || [];
+        if (args.length < 1) {
+            return;
         }
-        if (pid) {
-            if (idx2ForPage && idx2ForPage.length > 0) {
-                this.getTracker().setCustomVariable(2, idx2ForPage[0], idx2ForPage[1], VarScope.PAGE);
-            } else {
-                this.getTracker().deleteCustomVariable(2, VarScope.PAGE);
-            }
-        }
-        if (puid) {
-            if (idx3ForPage && idx3ForPage.length > 0) {
-                this.getTracker().setCustomVariable(3, idx3ForPage[0], idx3ForPage[1], VarScope.PAGE);
-            } else {
-                this.getTracker().deleteCustomVariable(3, VarScope.PAGE);
-            }
-        }
+        var idGoal = args[0];
+        var act = args.length > 1 ? args[1] : null;
+        var type = args.length > 2 ? args[2] : null;
+        var uid = args.length > 3 ? args[3] : null;
+        var pid = args.length > 4 ? args[4] : null;
+        var puid = args.length > 5 ? args[5] : null;
+        this.setCommonData(uid, pid, puid, VarScope.VISIT);
+        this.setGoalData(act, type, VarScope.VISIT);
+        this.getTracker().trackGoal(idGoal);
     };
 
     window.MeAnalytics = MeAnalytics;

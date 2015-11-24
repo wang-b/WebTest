@@ -45,6 +45,9 @@
                 border: none;
                 border-bottom: 1px solid #000000;
             }
+            .f-row input.short {
+                width: 80px;
+            }
         </style>
     </head>
     <body>
@@ -80,6 +83,17 @@
                 <div class="f-row">
                     <label for="city">city:</label>
                     <input type="text" name="city" value="1" id="city"/>
+                </div>
+                <div class="f-row">
+                    <label for="action">action:</label>
+                    <select id="action" name="action">
+                        <option value="pvisit" selected>pvisit</option>
+                        <option value="pdistr">pdistr</option>
+                        <option value="goal">goal</option>
+                    </select>
+                    idGoal: <input class="short" type="text" name="idGoal" value="1" id="idGoal"/>
+                    act: <input class="short" type="text" name="act" value="fav" id="act"/>
+                    type: <input class="short" type="text" name="type" value="user" id="type"/>
                 </div>
             </fieldset>
         </div>
@@ -210,7 +224,7 @@
 
                 function getCondition(period, date){
                     return {
-                        period: period || 'week',
+                        period: period || 'day',
                         date: date || 'today'
                     }
                 }
@@ -220,7 +234,7 @@
                     if (!analytics) {
                         return;
                     }
-                    var params = merge(getCondition(), getSegment(1001, 2001), analytics.params);
+                    var params = merge(getCondition(), getSegment(null, 2001), analytics.params);
                     var $obj = $(this);
                     params.method = $obj.attr('method');
                     console.dir(params);
@@ -250,14 +264,24 @@
                     var period = $('#period').val();
                     var date = $('#date').val();
                     var city = $('#city').val() ? 1 : 0;
+                    var action = $('#action').val();
+                    var idGoal = $('#idGoal').val();
+                    var act  =$('#act').val();
+                    var type = $('#type').val();
+                    if (action == 'goal') {
+                        pid = null;
+                    }
                     var params = {
-                        //action: 'pdistr',
+                        action: action,
                         token_auth: analytics.params.token_auth,
                         idSite: analytics.params.idSite,
                         pid: pid,
                         period: period,
                         date: date,
-                        city: city
+                        city: city,
+                        idGoal: idGoal,
+                        act: act,
+                        type: type
                         //language: 'zh-cn',  //中文
                         //pid: 2001,
                         //city: 1
