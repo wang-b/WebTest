@@ -63,7 +63,23 @@
                 </div>
                 <div class="f-row">
                     <label for="token_auth">token_auth:</label>
-                    <input type="text" name="token_auth" value="5920dc354b2c317ae6f2137168a799d4" id="token_auth"/>
+                    <input type="text" name="token_auth" value="7917f2596f8bb70c954893f200ba6274" id="token_auth"/>
+                </div>
+                <div class="f-row">
+                    <label for="pid">pid:</label>
+                    <input type="text" name="pid" value="2001" id="pid"/>
+                </div>
+                <div class="f-row">
+                    <label for="period">period:</label>
+                    <input type="text" name="period" value="day" id="period"/>
+                </div>
+                <div class="f-row">
+                    <label for="date">date:</label>
+                    <input type="text" name="date" value="today" id="date"/>
+                </div>
+                <div class="f-row">
+                    <label for="city">city:</label>
+                    <input type="text" name="city" value="1" id="city"/>
                 </div>
             </fieldset>
         </div>
@@ -118,18 +134,6 @@
             </li>
             <li>
                 <a href="#" class="analytics" method="Actions.getPageUrls">Actions.getPageUrls</a>
-            </li>
-            <li>
-                <a href="#" class="analytics" method=""></a>
-            </li>
-            <li>
-                <a href="#" class="analytics" method=""></a>
-            </li>
-            <li>
-                <a href="#" class="analytics" method=""></a>
-            </li>
-            <li>
-                <a href="#" class="analytics" method=""></a>
             </li>
             <li>
                 <a href="#" class="analytics" method=""></a>
@@ -242,13 +246,21 @@
                     if (!analytics) {
                         return;
                     }
+                    var pid = $('#pid').val();
+                    var period = $('#period').val();
+                    var date = $('#date').val();
+                    var city = $('#city').val() ? 1 : 0;
                     var params = {
                         //action: 'pdistr',
                         token_auth: analytics.params.token_auth,
                         idSite: analytics.params.idSite,
+                        pid: pid,
+                        period: period,
+                        date: date,
+                        city: city
                         //language: 'zh-cn',  //中文
-                        pid: 2001,
-                        city: 1
+                        //pid: 2001,
+                        //city: 1
                         //period: 'week',
                         //date: '2015-11-06'
                     };

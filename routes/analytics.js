@@ -13,7 +13,7 @@ var router = express.Router();
 
 router.use('/', function(req, res, next){
     var view = new View('web/analytics/index');
-    req.$view = {
+    req.__view__ = {
         title: 'Analytics',
         main: view.render()
     };

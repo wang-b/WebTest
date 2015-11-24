@@ -1,16 +1,15 @@
 <!-- Piwik -->
 <script type="text/javascript">
     var uid = window._user ? window._user.id : null;  //当前访客id(如果有的话)
-    var pid = window._product ? window._product.id : null; //当前作品id
-    var puid = window._product ? window._product.uid : null;  //当前作品所属用户id(作者)
-    var u = "//localpiwik.com/";   //注: 需配置
-    var siteId = 1;  //注：需配置
+    //var pid = window._product ? window._product.id : null; //当前作品id
+    //var puid = window._product ? window._product.uid : null;  //当前作品所属用户id(作者)
 
     var _paq = _paq || [];
     if (uid) {
         _paq.push(['setCustomVariable', 1, 'uid', uid, 'page']);
         _paq.push(['setCustomVariable', 1, 'uid', uid, 'visit']);
     }
+    /*
     if (pid) {
         _paq.push(['setCustomVariable', 2, 'pid', pid, 'page']);
         _paq.push(['setCustomVariable', 2, 'pid', pid, 'visit']);
@@ -19,14 +18,15 @@
         _paq.push(['setCustomVariable', 3, 'puid', puid, 'page']);
         _paq.push(['setCustomVariable', 3, 'puid', puid, 'visit']);
     }
+    */
     _paq.push(['setDocumentTitle', document.domain + '/' + document.title]);
     //_paq.push(['setCookieDomain', '*.me.cn']);
     //_paq.push(['setDomains', ['127.0.0.1', 'localhost']]); //增加主机域名，这些域名不记录为"出站链接"
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
-        //var u = "//localpiwik.com/";   //注: 需配置
-        //var siteId = 1;  //注：需配置
+        var u = "//localpiwik.com/";   //注: 需配置
+        var siteId = 1;  //注：需配置
         var trackerUrl = u + 'piwik.php';
         _paq.push(['setTrackerUrl', trackerUrl]);
         _paq.push(['setSiteId', siteId]);
@@ -42,7 +42,7 @@
         s.parentNode.insertBefore(g, s);
 
         function onPiwikReady() {
-            window.piwikTracker = window.Piwik.getTracker(trackerUrl, siteId);
+            window.PiwikTracker = window.Piwik.getTracker(trackerUrl, siteId);
         }
     })();
 </script>

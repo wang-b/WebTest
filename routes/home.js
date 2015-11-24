@@ -27,7 +27,7 @@ function isAdmin(req, res, next) {
 /* GET home page. */
 router.get('/', isLogined, isAdmin, function (req, res, next) {
     var view = new View('web/home/index', {title: 'Express home'});
-    req.$view = {
+    req.__view__ = {
         title: 'WebTest 1',
         main: view.render()
     };
@@ -37,14 +37,14 @@ router.get('/', isLogined, isAdmin, function (req, res, next) {
 /* GET home page. */
 router.get('/sub', function (req, res, next) {
     var view = new View('web/home/sub', {title: 'Express homesub'});
-    req.$view = view.render();
+    req.__view__ = view.render();
     next();
 });
 
 /* GET home page. */
 router.get('/list', function (req, res, next) {
     var view = new View('web/home/list', {title: 'Express list'});
-    req.$view = view.render();
+    req.__view__ = view.render();
     next();
 });
 

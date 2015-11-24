@@ -11,7 +11,7 @@ var router = express.Router();
 var showProduct = function (req, res, next){
     var pid = req.params.pid || 2001;
     var view = new View('web/product/index', {pid: pid});
-    req.$view = {
+    req.__view__ = {
         piwik: 'product',
         main: view.render()
     };

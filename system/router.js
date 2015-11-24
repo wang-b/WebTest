@@ -30,7 +30,7 @@ var beforeInterceptor = function(req, res, next){
  * 全局后置拦截器，可执行页面渲染
  */
 var afterInterceptor = function(req, res, next){
-    var viewData = req.$view;   //判断req对像中是否存在req.$view
+    var viewData = req.__view__;   //判断req对像中是否存在req.$view
 
     if (viewData) {
         console.log('执行全局渲染器拦截器...');

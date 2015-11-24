@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
     var view = new View('index');
     view.title = 'QiniuTest';
 
-    req.$view = view.render();
+    req.__view__ = view.render();
     next();
 });
 

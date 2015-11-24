@@ -9,6 +9,7 @@
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="stylesheet" href="/css/style.css" />
         <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="/js/analytics.js"></script>
     </head>
     <body>
         <%- locals.header || '' %>
@@ -16,13 +17,13 @@
         <%- locals.footer || '' %>
 
         <script type="text/javascript">
-            (function(){
+            $(function(){
                 var uids = [1001, 1002, 1003, 1004, 1005];
                 var uid = uids[new Date().getTime() % uids.length];
                 window._user = {
                     id: uid  //当前访问用户的id(如果存在的话)
                 };
-            })();
+            });
         </script>
         <%- include ../piwik/common.ejs %>
     </body>

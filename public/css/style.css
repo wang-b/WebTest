@@ -1,9 +1,19 @@
+@font-face {
+    font-family: PingFang;
+    src: url(../fonts/PingFang%20Medium.ttf);
+}
+
 body {
     padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    /* font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; */
+    font-family: PingFang;
+    font-size: 14px;
 }
 
 a {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
     color: #00B7FF;
 }
 
