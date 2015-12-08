@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+        <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn1.lncld.net/static/js/av-mini-0.6.1.js"></script>
+    </head>
+    <body>
+        <h4>首页</h4>
+
+        <div>
+            <a href="#" id="copyData">导数据</a>
+        </div>
+
+        <script type="text/javascript">
+            $(function() {
+                var TestLC = {
+                    appID: 'syrskc2gecvz24qjemgzqk8me6yenon2layp11tdnskosxg9',
+                    appKey: 'c56r8qz274bct8jlb924v2b05xaysxytfmt2ff0vfgulmks7'
+                };
+                var LC = {
+                    appID: '**hf3jpecovudrg8t7phw3xbt1osqfrmfhnwu22xs8jo1ia3hn',
+                    appKey: '**b9nndoind1e7tjrhj7owyg4m55d9uyymcqprklb5w9qxo9rr'
+                };
+                var objCLass = 'goalconf';
+
+                $('#copyData').click(function(){
+                    AV.initialize(TestLC.appID, TestLC.appKey);
+
+                    var query = new AV.Query(objCLass);
+                    query.find().then(function(results){
+                        AV.initialize(LC.appID, LC.appKey);
+                        for (var i = 0; i < results.length; i++) {
+                            var obj = results[i];
+                            var goalconf = new AV.Object(objCLass);
+                            goalconf.set('desc', obj.get('desc'));
+                            goalconf.set('goal_id', obj.get('goal_id'));
+                            goalconf.set('goal_name', obj.get('goal_name'));
+                            goalconf.set('type', obj.get('type'));
+                            goalconf.set('act', obj.get('act'));
+                            goalconf.set('platform', obj.get('platform'));
+
+                            goalconf.save().then(function(){
+                                console.log('添加成功: ' + obj.get('desc'));
+                            }, function(e){
+                                console.log('添加失败: ' + e.message);
+                            });
+                        }
+                    }, function(err){
+                        alert(err.message);
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

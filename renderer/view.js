@@ -7,6 +7,8 @@ var ejs = require('ejs');
 var path = require('path');
 var fs = require('fs');
 
+var _BOM = /^\uFEFF/;
+
 /**
  * 视图类，提供基于ejs的渲染功能，渲染数据绑定View对象上
  * @param view {String} 模板视图名称、标识或路径
@@ -60,16 +62,33 @@ View._initialized = false;
 View._autoMatch = false;
 
 /**
+ * 缓存视图字符串（未编译）数据
+ * @type {object}
+ * @private
+ */
+View._templates = {};
+
+/**
  * 根据当前对象绑定的数据，进行视图渲染
  * @return {String}
  */
 View.prototype.render = function() {
     var filename = path.resolve(View._root, this._view + View._ext);
-    var exists = fs.existsSync(filename);
-    if (!exists) {
-        filename = path.resolve(View._root, this._view + '/index' + View._ext)
+    if (View._autoMatch) {
+        var exists = fs.existsSync(filename);
+        if (!exists) {
+            filename = path.resolve(View._root, this._view + '/index' + View._ext)
+        }
     }
-    return ejs.render(null, this, {
+
+    //加载视图相关的数据
+    var template = (View._templates)[this._view];
+    if (!template) {
+        template = fs.readFileSync(filename).toString().replace(_BOM, '');
+        (View._templates)[this._view] = template;
+    }
+
+    return ejs.render(template, this, {
         filename: filename,
         cache: this._cache
     });

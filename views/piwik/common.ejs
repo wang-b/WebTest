@@ -18,7 +18,7 @@
             s = d.getElementsByTagName('script')[0];
         g.type = 'text/javascript';
         g.async = false;  //async：异步(多线程);
-        g.defer = true;
+        g.defer = false;
         g.onload = onPiwikReady;
         g.src = u + 'piwik.js';
         s.parentNode.insertBefore(g, s);

@@ -58,18 +58,28 @@
      * 设置目标统计相关参数
      * @param act 目标名称
      * @param type 目标类型
+     * @param val 参数，根据目标和动作不同，会有不同的定义
+     * @param uid 用户标识
      * @param scope 参数域，默认‘visit’
      */
     MeAnalytics.prototype.setGoalData = function(){
         var args = arguments || [];
         var act = args.length > 0 ? args[0] : null;
         var type = args.length > 1 ? args[1] : null;
-        var scope = args.length > 2 ? (args[2] || VarScope.VISIT) : VarScope.VISIT;
+        var val = args.length > 2 ? args[2] : null;
+        var uid = args.length > 3 ? args[3] : null;
+        var scope = args.length > 4 ? (args[4] || VarScope.VISIT) : VarScope.VISIT;
+        if (uid) {
+            this.getTracker().setCustomVariable(1, 'uid', uid, scope);
+        }
         if (act) {
-            this.getTracker().setCustomVariable(4, 'act', act, scope);
+            this.getTracker().setCustomVariable(2, 'act', act, scope);
         }
         if (type) {
-            this.getTracker().setCustomVariable(5, 'type', type, scope);
+            this.getTracker().setCustomVariable(3, 'type', type, scope);
+        }
+        if (val) {
+            this.getTracker().setCustomVariable(4, 'val', val, scope);
         }
     };
 
@@ -80,12 +90,16 @@
      * @param puid 作品所属用户标识
      */
     MeAnalytics.prototype.trackPageView = function(){
-        var args = arguments || [];
-        var uid  = args.length > 0 ? args[0] : null;
-        var pid  = args.length > 1 ? args[1] : null;
-        var puid  = args.length > 2 ? args[2] : null;
-        this.setCommonData(uid, pid, puid, VarScope.PAGE);
-        this.getTracker().trackPageView();  //手动触发一次页面统计
+        try {
+            var args = arguments || [];
+            var uid = args.length > 0 ? args[0] : null;
+            var pid = args.length > 1 ? args[1] : null;
+            var puid = args.length > 2 ? args[2] : null;
+            this.setCommonData(uid, pid, puid, VarScope.PAGE);
+            this.getTracker().trackPageView();  //手动触发一次页面统计
+        } catch (e) {
+            console.log(e.message);
+        }
     };
 
     /**
@@ -93,24 +107,25 @@
      * @param idGoal 目标id, 必需
      * @param act 目标行为
      * @param type 目标行为类型
+     * @param val 参数，根据目标和动作不同，会有不同的定义
      * @param uid 用户id
-     * @param pid 作品id
-     * @param puid 作品所属作者id
      */
     MeAnalytics.prototype.trackGoal = function(){
-        var args = arguments || [];
-        if (args.length < 1) {
-            return;
+        try {
+            var args = arguments || [];
+            if (args.length < 1) {
+                return;
+            }
+            var idGoal = args[0];
+            var act = args.length > 1 ? args[1] : null;
+            var type = args.length > 2 ? args[2] : null;
+            var val = args.length > 3 ? args[3] : null;
+            var uid = args.length > 4 ? args[4] : null;
+            this.setGoalData(act, type, val, uid, VarScope.VISIT);
+            this.getTracker().trackGoal(idGoal);
+        } catch (e) {
+            console.log(e.message);
         }
-        var idGoal = args[0];
-        var act = args.length > 1 ? args[1] : null;
-        var type = args.length > 2 ? args[2] : null;
-        var uid = args.length > 3 ? args[3] : null;
-        var pid = args.length > 4 ? args[4] : null;
-        var puid = args.length > 5 ? args[5] : null;
-        this.setCommonData(uid, pid, puid, VarScope.VISIT);
-        this.setGoalData(act, type, VarScope.VISIT);
-        this.getTracker().trackGoal(idGoal);
     };
 
     window.MeAnalytics = MeAnalytics;

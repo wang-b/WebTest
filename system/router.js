@@ -40,7 +40,7 @@ var afterInterceptor = function(req, res, next){
         //绑定数据
         if (typeof(viewData) == 'string') {
             view.main = viewData;
-        } else if (typeof(viewData) == 'object') {
+        } else if (typeof(viewData) == 'object' && viewData.hasOwnProperty(key)) {
             for (var key in viewData) {
                 view[key] = viewData[key];
             }
